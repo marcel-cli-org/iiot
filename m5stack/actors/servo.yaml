@@ -1,0 +1,9 @@
+apiVersion: iiot.mc-b.ch/v1alpha1
+kind: Actor
+metadata:
+  name: servo
+spec:
+  name: Servo
+  type: Motor
+  topic: servo
+  state: "idle"

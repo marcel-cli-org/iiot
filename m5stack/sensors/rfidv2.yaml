@@ -1,0 +1,12 @@
+apiVersion: iiot.mc-b.ch/v1alpha1
+kind: Sensor
+metadata:
+  name: rfidv2
+spec:
+  name: RFID V2
+  type: RFID Sensor
+  topic: rfid
+  values:
+    - name: Card ID
+      unit: ""
+      value: ""

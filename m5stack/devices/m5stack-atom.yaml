@@ -1,0 +1,16 @@
+apiVersion: iiot.mc-b.ch/v1alpha1
+kind: Device
+metadata:
+  name: m5stack-atom
+spec:
+  type: M5Stack Atom
+  topic: atom
+  sensors:
+    - name: enviv-sensor
+      sensorRef: enviv-sensor
+    - name: rfidv2-sensor
+      sensorRef: rfidv2-sensor
+  actors:
+    - name: servo-actor
+      actorRef: servo-actor
+

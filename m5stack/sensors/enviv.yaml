@@ -1,0 +1,18 @@
+apiVersion: iiot.mc-b.ch/v1alpha1
+kind: Sensor
+metadata:
+  name: enviv
+spec:
+  name: ENV III
+  type: Environmental Sensor
+  topic: env
+  values:
+    - name: Temperature
+      unit: "°C"
+      value: "0.0"
+    - name: Humidity
+      unit: "%"
+      value: "0.0"
+    - name: Atmospheric Pressure
+      unit: "hPa"
+      value: "0.0"

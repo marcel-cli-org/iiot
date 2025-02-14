@@ -29,4 +29,19 @@ Details zu einem Sensor
 
     kubectl describe sensor enviii        
 
+### Operator Pattern und Listener erstellen
 
+    
+    # Operator-Image bauen
+    cd operator
+    docker build -t <dein-registry>/mqtt-operator:latest .
+    
+    # Operator-Image pushen
+    docker push <dein-registry>/mqtt-operator:latest
+    
+    # MQTT-Listener-Image bauen
+    cd ../mqtt-listener
+    docker build -t <dein-registry>/mqtt-listener:latest .
+    
+    # MQTT-Listener-Image pushen
+    docker push <dein-registry>/mqtt-listener:latest

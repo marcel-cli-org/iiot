@@ -1,0 +1,4 @@
+kopf==1.36.1
+kubernetes==26.1.0
+requests==2.31.0
+# Je nach Bedarf kannst du weitere Pakete hinzufügen

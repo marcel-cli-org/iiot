@@ -1,0 +1,82 @@
+import os
+import sys
+import paho.mqtt.client as mqtt
+import json
+import requests
+
+def on_connect(client, userdata, flags, rc):
+    if rc == 0:
+        print("Verbindung zum MQTT-Broker erfolgreich hergestellt.")
+        # Abonniere alle Topics, die in TOPICS stehen
+        for topic in userdata['topics']:
+            client.subscribe(topic)
+            print(f"Abonniere Topic: {topic}")
+    else:
+        print(f"Fehler bei der MQTT-Verbindung. Return-Code: {rc}")
+
+def on_message(client, userdata, msg):
+    # Nachricht empfangen
+    payload_str = msg.payload.decode("utf-8")
+    print(f"[{msg.topic}] -> {payload_str}")
+
+    # Schreibe in Datei /data/<Topic>.txt
+    # Ersetze evtl. verbotene Zeichen im Dateinamen.
+    safe_topic = msg.topic.replace("/", "_")
+    file_path = f"/data/{safe_topic}.txt"
+    try:
+        with open(file_path, "a") as f:
+            f.write(payload_str + "\n")
+    except Exception as e:
+        print(f"Fehler beim Schreiben in {file_path}: {e}", file=sys.stderr)
+
+    # (Optional) Daten als JSON per HTTP POST mit CloudEvents-Headern senden
+    # Hier musst du ggf. deine Ziel-URL etc. anpassen.
+    cloudevents_url = os.environ.get("CLOUDEVENTS_URL", "")
+    if cloudevents_url:
+        data_json = {
+            "topic": msg.topic,
+            "payload": payload_str
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "Ce-Specversion": "1.0",
+            "Ce-Type": "my.mqtt.message",
+            "Ce-Source": "mqtt-listener",
+            "Ce-Id": "some-unique-id"
+        }
+        try:
+            resp = requests.post(cloudevents_url, headers=headers, data=json.dumps(data_json))
+            resp.raise_for_status()
+            print(f"CloudEvent an {cloudevents_url} gesendet.")
+        except Exception as e:
+            print(f"Fehler beim Senden an {cloudevents_url}: {e}", file=sys.stderr)
+
+def main():
+    mqtt_broker_url = os.environ.get("MQTT_BROKER_URL", "mqtt://localhost:1883")
+    mqtt_device_name = os.environ.get("MQTTDEVICE_NAME", "default-device")
+    topics_str = os.environ.get("TOPICS", "")
+    topics = topics_str.split(",") if topics_str else []
+
+    # Aus MQTT-URL Host & Port extrahieren
+    # Beispiel: "mqtt://test-broker:1883"
+    if mqtt_broker_url.startswith("mqtt://"):
+        mqtt_broker_url = mqtt_broker_url.replace("mqtt://", "")
+    broker_parts = mqtt_broker_url.split(":")
+    broker_host = broker_parts[0]
+    broker_port = int(broker_parts[1]) if len(broker_parts) > 1 else 1883
+
+    client = mqtt.Client(userdata={"topics": topics})
+    client.on_connect = on_connect
+    client.on_message = on_message
+
+    # Falls Username/Passwort notwendig, hier client.username_pw_set(...) aufrufen
+    # client.username_pw_set("user", "password")
+
+    # Mit dem Broker verbinden
+    client.connect(broker_host, broker_port, 60)
+
+    # Blocking loop, um Nachrichten zu verarbeiten
+    client.loop_forever()
+
+if __name__ == "__main__":
+    main()

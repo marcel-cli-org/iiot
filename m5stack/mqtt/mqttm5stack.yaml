@@ -1,0 +1,11 @@
+apiVersion: iiot.mc-b.ch/v1alpha1
+kind: MQTTDevice
+metadata:
+  name: m5stack-mqttdevice
+spec:
+  deviceRef: example-device  # Name der referenzierten Device-Ressource
+  mqttSettings:
+    broker: mqtt://cloud.tbz.ch  # URL des MQTT-Brokers
+    topic: devices  # MQTT-Topic für das Gerät
+    qos: 1  # Quality of Service Level (0, 1 oder 2)
+    retain: false  # Nachricht zurückhalten (true oder false)

@@ -1,0 +1,43 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: mqttdevices.iiot.mc-b.ch
+spec:
+  group: iiot.mc-b.ch
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            apiVersion:
+              type: string
+            kind:
+              type: string
+            metadata:
+              type: object
+            spec:
+              type: object
+              properties:
+                deviceRef:
+                  type: string
+                mqttSettings:
+                  type: object
+                  properties:
+                    broker:
+                      type: string
+                    topic:
+                      type: string
+                    qos:
+                      type: integer
+                    retain:
+                      type: boolean
+  scope: Namespaced
+  names:
+    plural: mqttdevices
+    singular: mqttdevice
+    kind: MQTTDevice
+    shortNames:
+      - mqttdev

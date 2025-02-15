@@ -10,7 +10,7 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Kopiere das Skript
-COPY mqtt_listener.py /app/mqtt_listener.py
+COPY mqtt-listener.py /app/mqtt-listener.py
 
 WORKDIR /app
 

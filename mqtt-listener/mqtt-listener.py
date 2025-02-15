@@ -52,9 +52,9 @@ def on_message(client, userdata, msg):
             print(f"Fehler beim Senden an {cloudevents_url}: {e}", file=sys.stderr)
 
 def main():
-    mqtt_broker_url = os.environ.get("MQTT_BROKER_URL", "mqtt://localhost:1883")
+    mqtt_broker_url = os.environ.get("MQTT_BROKER_URL", "mqtt://cloud.tbz.ch:1883")
     mqtt_device_name = os.environ.get("MQTTDEVICE_NAME", "default-device")
-    topics_str = os.environ.get("TOPICS", "")
+    topics_str = os.environ.get("TOPICS", "device")
     topics = topics_str.split(",") if topics_str else []
 
     # Aus MQTT-URL Host & Port extrahieren

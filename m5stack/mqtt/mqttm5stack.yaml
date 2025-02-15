@@ -3,9 +3,9 @@ kind: MQTTDevice
 metadata:
   name: m5stack-mqttdevice
 spec:
-  deviceRef: example-device  # Name der referenzierten Device-Ressource
+  deviceRef: m5stack-core  # Name der referenzierten Device-Ressource
   mqttSettings:
-    broker: mqtt://cloud.tbz.ch  # URL des MQTT-Brokers
+    broker: mqtt://10.0.40.8:1883  # URL des MQTT-Brokers
     topic: devices  # MQTT-Topic für das Gerät
     qos: 1  # Quality of Service Level (0, 1 oder 2)
     retain: false  # Nachricht zurückhalten (true oder false)

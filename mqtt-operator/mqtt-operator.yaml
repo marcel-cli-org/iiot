@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mqtt-operator
+spec:
+  containers:
+  - name: mqtt-operator
+    image: registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-operator:1.0.0
+    imagePullPolicy: Always
+  serviceAccountName: mqttservice-acc

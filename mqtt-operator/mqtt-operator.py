@@ -23,7 +23,7 @@ def create_mqtt_listener_pod(
 
     # Hier beispielhaft das Docker-Image "python:3.9-slim" als Platzhalter
     # An dieser Stelle würdest du dein eigenes Image mit dem MQTT-Listener-Code verwenden.
-    container_image = "python:3.9-slim"
+    container_image = "registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.0"
 
     # Wir übergeben die nötigen Informationen als Umgebungsvariablen.
     # Du könntest alternativ ein ConfigMap/Secret verwenden.
@@ -49,9 +49,6 @@ def create_mqtt_listener_pod(
                     "name": "mqtt-listener",
                     "image": container_image,
                     "env": env_vars,
-                    # Command/Args nur als Beispiel:
-                    "command": ["python"],
-                    "args": ["/app/mqtt_listener.py"],
                     # VolumeMount für /data, wenn du auf einen PersistentVolumeClaim zugreifen möchtest
                     # oder als einfachen Beispiel hier leer lassen.
                 }
@@ -86,16 +83,17 @@ def send_cloudevent_data(url: str, data: dict, source: str, event_type: str):
 # Operator-Funktionen
 #
 
-@kopf.on.create('example.com', 'v1', 'mqttdevices')
+@kopf.on.create('iiot.mc-b.ch', 'v1alpha1', 'mqttdevice')
 def on_create_mqttdevice(spec, name, namespace, logger, **kwargs):
     """
     Reagiert auf das Erstellen eines MQTTDevice-Objekts.
     """
     logger.info(f"MQTTDevice '{name}' wurde erstellt. Starte zweiten Pod...")
 
-    # Lies die relevanten Felder aus dem spec (Beispiel: mqttBrokerUrl, devices, sensors, etc.)
-    mqtt_broker_url = spec.get("mqttBrokerUrl", "mqtt://test-broker:1883")
-    device_topic = spec.get("deviceTopic", "device1")
+    # Lies die relevanten Felder aus dem spec (Beispiel: mqttSettings, broker, topic, etc.)
+    mqtt_settings = spec.get("mqttSettings", {})
+    mqtt_broker_url = mqtt_settings.get("broker", "mqtt://cloud.tbz.ch:1883")
+    device_topic = mqtt_settings.get("topic", "device1")
     sensors = spec.get("sensors", [])
 
     # Erzeuge die vollständigen MQTT-Topics, z.B. <MQTTDevice.topic>/<Device.topic>/<Sensor.topic>
@@ -121,7 +119,7 @@ def on_create_mqttdevice(spec, name, namespace, logger, **kwargs):
     return {"message": f"MQTTDevice '{name}' wurde erfolgreich erstellt."}
 
 
-@kopf.on.update('example.com', 'v1', 'mqttdevices')
+@kopf.on.update('iiot.mc-b.ch', 'v1alpha1', 'mqttdevice')
 def on_update_mqttdevice(spec, name, namespace, logger, **kwargs):
     """
     Reagiert auf Änderungen an einem MQTTDevice-Objekt.
@@ -164,7 +162,7 @@ def on_update_mqttdevice(spec, name, namespace, logger, **kwargs):
     return {"message": f"MQTTDevice '{name}' wurde erfolgreich aktualisiert."}
 
 
-@kopf.on.delete('example.com', 'v1', 'mqttdevices')
+@kopf.on.delete('iiot.mc-b.ch', 'v1alpha1', 'mqttdevice')
 def on_delete_mqttdevice(name, namespace, logger, **kwargs):
     """
     Reagiert auf das Löschen eines MQTTDevice-Objekts.

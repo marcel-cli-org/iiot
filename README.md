@@ -30,18 +30,23 @@ Details zu einem Sensor
     kubectl describe sensor enviii        
 
 ### Operator Pattern und Listener erstellen
-
     
-    # Operator-Image bauen
-    cd operator
-    docker build -t <dein-registry>/mqtt-operator:latest .
+    cd mqtt-operator
+    docker build -t registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-operator:1.0.0 .
+    docker push registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-operator:1.0.0
     
-    # Operator-Image pushen
-    docker push <dein-registry>/mqtt-operator:latest
-    
-    # MQTT-Listener-Image bauen
     cd ../mqtt-listener
-    docker build -t <dein-registry>/mqtt-listener:latest .
+    docker build -t registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.0 .
+    docker push registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.0
+
+### Operator deployen
     
-    # MQTT-Listener-Image pushen
-    docker push <dein-registry>/mqtt-listener:latest
+    cd ../mqtt-operator
+    kubectl delete -f ../m5stack/mqtt       
+    kubectl delete -f .
+    kubectl apply -f .
+    
+### Testen
+
+    kubectl apply -f ../m5stack/mqtt 
+    

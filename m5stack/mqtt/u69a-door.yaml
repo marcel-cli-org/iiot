@@ -1,14 +1,14 @@
 apiVersion: iiot.mc-b.ch/v1alpha1
 kind: MQTTDevice
 metadata:
-  name: m5stack-mqttdevice
+  name: u69a-door
 spec:
   deviceRef: m5stack-core  # Name der referenzierten Device-Ressource
   mqttSettings:
     broker: mqtt://10.0.40.8:1883  # URL des MQTT-Brokers
-    topic: m5stack-mqttdevice  # MQTT-Topic für das Gerät
+    topic: u69a-door  # MQTT-Topic für das Gerät
     qos: 1  # Quality of Service Level (0, 1 oder 2)
     retain: false  # Nachricht zurückhalten (true oder false)
   storage:
-    pvcName: "longhorn-rwx"
+    pvcName: "data-claim"
     mountPath: "/data"

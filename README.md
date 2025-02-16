@@ -54,12 +54,8 @@ Wenn sich die CRD nicht mehr löschen lassen, sind die finalizer Einträge zu l�
 
 ### Operator deployen
     
-    kubectl delete -f mqtt-operator --grace-period=0 --force 
+    kubectl delete -f mqtt-operator # --grace-period=0 --force 
     kubectl apply  -f mqtt-operator     
-    
-Der Port unter welche das UI erreichbar ist:
-    
-    kubectl get svc mqtt-device-ui -o jsonpath='{.spec.ports[0].nodePort}'   
     
 ### Device anlegen
 

@@ -65,7 +65,8 @@ def main():
     broker_host = broker_parts[0]
     broker_port = int(broker_parts[1]) if len(broker_parts) > 1 else 1883
 
-    client = mqtt.Client(userdata={"topics": topics})
+    # Client mit Device-Name als Client-ID
+    client = mqtt.Client(client_id=mqtt_device_name, userdata={"topics": topics})
     client.on_connect = on_connect
     client.on_message = on_message
 

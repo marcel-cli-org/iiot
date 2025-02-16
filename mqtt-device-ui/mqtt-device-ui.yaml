@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqtt-device-ui
+  labels:
+    app: mqtt-device-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mqtt-device-ui
+  template:
+    metadata:
+      labels:
+        app: mqtt-device-ui
+    spec:
+      containers:
+        - name: mqtt-device-ui
+          image: registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-device-ui:1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MQTT_BROKER_URL
+              value: "mqtt://10.0.40.8:11883"    # Beispiel-Broker
+            - name: PORT
+              value: "8080"                      # Entspricht Flask-App-Einstellung
+            
+      # Wichtig, wenn du das K8s-API von innen nutzt
+      serviceAccountName: mqttservice-acc            
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mqtt-device-ui
+spec:
+  selector:
+    app: mqtt-device-ui
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer      

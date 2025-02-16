@@ -27,26 +27,54 @@ Ausgabe der erstellten Geräte
     
 Details zu einem Sensor
 
-    kubectl describe sensor enviii        
+    kubectl describe sensor enviii       
+    
+**Hinweis**:
 
-### Operator Pattern und Listener erstellen
+Wenn sich die CRD nicht mehr löschen lassen, sind die finalizer Einträge zu löschen
+
+    kubectl patch crd mqttdevices.iiot.mc-b.ch --type=merge -p '{"metadata":{"finalizers":[]}}'        
+
+### Operator Pattern, Listener und UI erstellen
     
     cd mqtt-operator
     docker build -t registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-operator:1.0.0 .
     docker push registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-operator:1.0.0
+    cd ..
     
-    cd ../mqtt-listener
-    docker build -t registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.1 .
-    docker push registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.1
+    cd mqtt-listener
+    docker build -t registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.2 .
+    docker push registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.2
+    cd ..
+    
+    cd mqtt-device-ui
+    docker build -t registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-device-ui:1.0.0 .
+    docker push registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-device-ui:1.0.0 
+    cd ..
 
 ### Operator deployen
     
-    cd ../mqtt-operator
-    kubectl delete -f ../m5stack/mqtt       
-    kubectl delete -f .
-    kubectl apply -f     
+    kubectl delete -f mqtt-operator --grace-period=0 --force 
+    kubectl apply  -f mqtt-operator     
     
-### Testen    
+Der Port unter welche das UI erreichbar ist:
+    
+    kubectl get svc mqtt-device-ui -o jsonpath='{.spec.ports[0].nodePort}'   
+    
+### Device anlegen
 
-    kubectl apply -f ../m5stack/mqtt 
+    kubectl delete -f m5stack/mqtt # --grace-period=0 --force  
+    kubectl apply  -f m5stack/mqtt 
+    
+Und zum Schluss das UI   
+
+    kubectl delete -f mqtt-device-ui # --grace-period=0 --force 
+    kubectl apply  -f mqtt-device-ui    
+    
+Der Port unter welche das UI erreichbar ist:
+    
+    kubectl get svc mqtt-device-ui -o jsonpath='{.spec.ports[0].nodePort}' 
+    
+   
+       
     

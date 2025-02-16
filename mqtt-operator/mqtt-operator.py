@@ -11,7 +11,9 @@ def create_mqtt_listener_pod(
     namespace: str,
     mqtt_device_name: str,
     mqtt_broker_url: str,
-    topics: list
+    topics: list,
+    pvc_name,
+    mount_path    
 ):
     """
     Erzeugt ein Pod-Manifest für den "zweiten Pod", 
@@ -45,8 +47,20 @@ def create_mqtt_listener_pod(
                     "name": "mqtt-listener",
                     "image": container_image,
                     "env": env_vars,
-                    # VolumeMount für /data, wenn du auf einen PersistentVolumeClaim zugreifen möchtest
-                    # oder als einfachen Beispiel hier leer lassen.
+                    "volumeMounts": [
+                        {
+                            "name": "data-volume",
+                            "mountPath": mount_path  # z. B. "/data"
+                        }
+                    ]
+                }
+            ],
+            "volumes": [
+                {
+                    "name": "data-volume",
+                    "persistentVolumeClaim": {
+                        "claimName": pvc_name
+                    }
                 }
             ],
             "restartPolicy": "Always",
@@ -87,6 +101,11 @@ def on_create_mqttdevice(body, spec, name, namespace, logger, **kwargs):
     mqtt_settings = spec.get("mqttSettings", {})
     mqtt_broker_url = mqtt_settings.get("broker", "mqtt://cloud.tbz.ch:1883")
     mqtt_root_topic = mqtt_settings.get("topic", "devices")
+    
+    # Speicher-Config auslesen
+    storage_spec = spec.get("storage", {})
+    pvc_name = storage_spec.get("pvcName", "data-claim")   # fallback
+    mount_path = storage_spec.get("mountPath", "/data")   # fallback    
 
     device_ref = spec.get("deviceRef")
     if not device_ref:
@@ -156,7 +175,9 @@ def on_create_mqttdevice(body, spec, name, namespace, logger, **kwargs):
         namespace=namespace, 
         mqtt_device_name=name,
         mqtt_broker_url=mqtt_broker_url,
-        topics=all_topics
+        topics=all_topics,
+        pvc_name=pvc_name,
+        mount_path=mount_path
     )
     return {"message": f"MQTTDevice '{name}' verarbeitet, Topics: {all_topics}"}
 

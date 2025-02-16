@@ -9,3 +9,6 @@ spec:
     topic: devices  # MQTT-Topic für das Gerät
     qos: 1  # Quality of Service Level (0, 1 oder 2)
     retain: false  # Nachricht zurückhalten (true oder false)
+  storage:
+    pvcName: "longhorn-rwx"
+    mountPath: "/data"

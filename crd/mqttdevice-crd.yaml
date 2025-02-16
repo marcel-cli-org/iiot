@@ -34,6 +34,13 @@ spec:
                       type: integer
                     retain:
                       type: boolean
+                storage:
+                  type: object
+                  properties:
+                    pvcName:
+                      type: string
+                    mountPath:
+                      type: string
   scope: Namespaced
   names:
     plural: mqttdevices

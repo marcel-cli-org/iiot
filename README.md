@@ -36,17 +36,17 @@ Details zu einem Sensor
     docker push registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-operator:1.0.0
     
     cd ../mqtt-listener
-    docker build -t registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.0 .
-    docker push registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.0
+    docker build -t registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.1 .
+    docker push registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.1
 
 ### Operator deployen
     
     cd ../mqtt-operator
     kubectl delete -f ../m5stack/mqtt       
     kubectl delete -f .
-    kubectl apply -f .
+    kubectl apply -f     
     
-### Testen
+### Testen    
 
     kubectl apply -f ../m5stack/mqtt 
     

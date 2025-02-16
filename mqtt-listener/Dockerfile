@@ -12,7 +12,10 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 # Kopiere das Skript
 COPY mqtt-listener.py /app/mqtt-listener.py
 
+# Output Verzeichnis 
+RUN mkdir /data; touch /data/.gitignore
+
 WORKDIR /app
 
 # Standard-Kommando: Starte das Listener-Skript
-CMD ["python", "/app/mqtt-listener.py"]
+CMD ["python", "-u", "/app/mqtt-listener.py"]

@@ -7,10 +7,10 @@ spec:
   topic: atom
   sensors:
     - name: enviv-sensor
-      sensorRef: enviv-sensor
+      sensorRef: enviv
     - name: rfidv2-sensor
-      sensorRef: rfidv2-sensor
+      sensorRef: rfidv2
   actors:
     - name: servo-actor
-      actorRef: servo-actor
+      actorRef: servo
 

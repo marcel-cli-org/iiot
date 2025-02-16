@@ -7,10 +7,10 @@ spec:
   topic: m5stackcore
   sensors:
     - name: enviii-sensor
-      sensorRef: enviii-sensor
+      sensorRef: enviii
     - name: rfid-sensor
-      sensorRef: rfid-sensor
+      sensorRef: rfid
   actors:
     - name: servo-actor
-      actorRef: servo-actor
+      actorRef: servo
 

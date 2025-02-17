@@ -254,11 +254,11 @@ def publish():
     sensor_ref = request.form.get("sensorRef", "")
 
     if "env" in sensor_ref.lower():
-        # ENV-Beispiel: 0xBC;25.0,50.0,900
-        payload = "0xBC;25.0,50.0,900"
+        # ENV-Beispiel: 0xBC,25.40,51.6,middle
+        payload = "0xBC,25.40,51.6,middle"
     elif "rfid" in sensor_ref.lower():
-        # RFID-Beispiel: RFID=12345
-        payload = "RFID=12345"
+        # RFID-Beispiel: RFID=AB CD EF 12 34 56 78
+        payload = "RFID=AB CD EF 12 34 56 78"
     else:
         # Fallback
         payload = f"TestMsg for {sensor_ref}"

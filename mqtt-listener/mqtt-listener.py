@@ -3,6 +3,7 @@ import sys
 import paho.mqtt.client as mqtt
 import json
 import requests
+import uuid
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
@@ -54,6 +55,9 @@ def on_message(client, userdata, msg):
 def main():
     mqtt_broker_url = os.environ.get("MQTT_BROKER_URL", "mqtt://cloud.tbz.ch:1883")
     mqtt_device_name = os.environ.get("MQTTDEVICE_NAME", "default-device")
+    unique_id = f"{mqtt_device_name}-{uuid.uuid4()}"  # Beispiel: default-device-550e8400-e29b-41d4-a716-446655440000
+    print(f"MQTT-Client-ID: {unique_id}")  # Zur Überprüfung    
+    
     topics_str = os.environ.get("TOPICS", "device")
     topics = topics_str.split(",") if topics_str else []
 
@@ -66,7 +70,7 @@ def main():
     broker_port = int(broker_parts[1]) if len(broker_parts) > 1 else 1883
 
     # Client mit Device-Name als Client-ID
-    client = mqtt.Client(client_id=mqtt_device_name, userdata={"topics": topics})
+    client = mqtt.Client(client_id=unique_id, userdata={"topics": topics})
     client.on_connect = on_connect
     client.on_message = on_message
 

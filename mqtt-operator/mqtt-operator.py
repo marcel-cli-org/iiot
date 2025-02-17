@@ -21,7 +21,7 @@ def create_mqtt_listener_pod(
     """
     
     # MQTT Listener
-    container_image = "registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.2"
+    container_image = "registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.3"
 
     # Wir übergeben die nötigen Informationen als Umgebungsvariablen.
     # Du könntest alternativ ein ConfigMap/Secret verwenden.
@@ -46,6 +46,7 @@ def create_mqtt_listener_pod(
                 {
                     "name": "mqtt-listener",
                     "image": container_image,
+                    "imagePullPolicy": "Always",
                     "env": env_vars,
                     "volumeMounts": [
                         {
@@ -63,8 +64,7 @@ def create_mqtt_listener_pod(
                     }
                 }
             ],
-            "restartPolicy": "Always",
-            "imagePullPolicy": "Always"
+            "restartPolicy": "Always"
         }
     }
 

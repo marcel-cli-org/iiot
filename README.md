@@ -31,7 +31,7 @@ Details zu einem Sensor
     
 **Hinweis**:
 
-Wenn sich die CRD nicht mehr löschen lassen, sind die finalizer Einträge zu löschen
+Wenn sich die CRD nicht mehr löschen lassen, sind die `finalizers` Einträge zu löschen
 
     kubectl patch crd mqttdevices.iiot.mc-b.ch --type=merge -p '{"metadata":{"finalizers":[]}}'        
 
@@ -43,8 +43,8 @@ Wenn sich die CRD nicht mehr löschen lassen, sind die finalizer Einträge zu l�
     cd ..
     
     cd mqtt-listener
-    docker build -t registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.2 .
-    docker push registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.2
+    docker build -t registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.3 .
+    docker push registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-listener:1.0.3
     cd ..
     
     cd mqtt-device-ui
@@ -54,23 +54,33 @@ Wenn sich die CRD nicht mehr löschen lassen, sind die finalizer Einträge zu l�
 
 ### Operator deployen
     
-    kubectl delete -f mqtt-operator # --grace-period=0 --force 
     kubectl apply  -f mqtt-operator     
     
 ### Device anlegen
 
-    kubectl delete -f m5stack/mqtt # --grace-period=0 --force  
     kubectl apply  -f m5stack/mqtt 
     
-Und zum Schluss das UI   
+Und zum Schluss das UI mit dem Port unter welchem das UI erreichbar ist: 
 
-    kubectl delete -f mqtt-device-ui # --grace-period=0 --force 
     kubectl apply  -f mqtt-device-ui    
-    
-Der Port unter welche das UI erreichbar ist:
-    
     kubectl get svc mqtt-device-ui -o jsonpath='{.spec.ports[0].nodePort}' 
     
+Das UI beinhaltet Buttons, mit welchem Testnachrichten gesendet werden können. Diese sind in den Logdateien der Devices ersichtlich.
+
+    kubectl logs mqtt-listener-au-u69    
+    
+und
+
+    kubectl logs mqtt-listener-au-u69a    
    
+### Aufräumen
+
+Es ist die folgende Reihenfolge einzuhalten!
+
+    kubectl delete -f m5stack/mqtt # --grace-period=0 --force  
+    kubectl delete -f mqtt-operator # --grace-period=0 --force 
+    kubectl delete -f mqtt-device-ui # --grace-period=0 --force 
+    kubectl delete -f m5stack/sensors -f m5stack/actors -f m5stack/devices    
+    kubectl delete -f crd
        
     

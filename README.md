@@ -71,7 +71,9 @@ Das UI beinhaltet Buttons, mit welchem Testnachrichten gesendet werden können. 
     
 und
 
-    kubectl logs mqtt-listener-au-u69a    
+    kubectl logs mqtt-listener-au-u69a   
+    
+Zusätzlich werden die Sensorinformationen beim `au-u69` in das Longhorn Filesystem und beim `au-u69a` ins Verzeichnis `/data` geschrieben.     
    
 ### Aufräumen
 

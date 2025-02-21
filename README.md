@@ -14,7 +14,7 @@ MQTTDevice empfängt Daten mittels des MQTT-Protokolls. HTTP und Matter Device (
 Custom Resources erstellen
 
     git clone https://gitlab.com/ch-mc-b/autoshop-ms/infra/iiot.git
-    cd iito
+    cd iiot
     kubectl apply -f crd
     
 Sensoren, Aktoren und Devices erstellen für die [M5Stack](https://m5stack.com/) IoT Geräte    
@@ -35,7 +35,7 @@ Wenn sich die CRD nicht mehr löschen lassen, sind die `finalizers` Einträge zu
 
     kubectl patch crd mqttdevices.iiot.mc-b.ch --type=merge -p '{"metadata":{"finalizers":[]}}'        
 
-### Operator Pattern, Listener und UI erstellen
+### Operator Pattern, Listener und UI erstellen (falls nicht bereits erfolgt)
     
     cd mqtt-operator
     docker build -t registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-operator:1.0.0 .
@@ -62,10 +62,13 @@ Wenn sich die CRD nicht mehr löschen lassen, sind die `finalizers` Einträge zu
 
     kubectl apply  -f m5stack/mqtt 
     
+**ACHTUNG**: für die AWS Umgebungen muss zuerst der MQTT Broker Eintrag auf `cloud.tbz.ch` angepasst werden.
+    
 Und zum Schluss das UI mit dem Port unter welchem das UI erreichbar ist: 
 
     kubectl apply  -f mqtt-device-ui    
-    kubectl get svc mqtt-device-ui -o jsonpath='{.spec.ports[0].nodePort}' 
+    kubectl get svc mqtt-device-ui -o jsonpath='{.spec.ports[0].nodePort}'
+    echo "http://"$(cat ~/work/server-ip)":$(kubectl get service mqtt-device-ui -o=jsonpath='{ .spec.ports[0].nodePort }')/" 
     
 Das UI beinhaltet Buttons, mit welchem Testnachrichten gesendet werden können. Diese sind in den Logdateien der Devices ersichtlich.
 

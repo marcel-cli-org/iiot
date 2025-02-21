@@ -51,6 +51,8 @@ Wenn sich die CRD nicht mehr löschen lassen, sind die `finalizers` Einträge zu
     docker build -t registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-device-ui:1.0.0 .
     docker push registry.gitlab.com/ch-mc-b/autoshop-ms/infra/iiot/mqtt-device-ui:1.0.0 
     cd ..
+    
+**Hinweis**: Umgebungsvariable `DOCKER_HOST=ssh://cna-[KVM-Host]-cp1.maas` setzen um direkt vom lokalen NB die Arbeiten ausführen zu können.
 
 ### Operator deployen
     

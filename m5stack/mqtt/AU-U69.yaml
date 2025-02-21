@@ -12,3 +12,5 @@ spec:
   storage:
     pvcName: "longhorn-rwx"
     mountPath: "/data"
+  finalizers:
+    

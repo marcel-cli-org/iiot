@@ -67,7 +67,6 @@ Wenn sich die CRD nicht mehr löschen lassen, sind die `finalizers` Einträge zu
 Und zum Schluss das UI mit dem Port unter welchem das UI erreichbar ist: 
 
     kubectl apply  -f mqtt-device-ui    
-    kubectl get svc mqtt-device-ui -o jsonpath='{.spec.ports[0].nodePort}'
     echo "http://"$(cat ~/work/server-ip)":$(kubectl get service mqtt-device-ui -o=jsonpath='{ .spec.ports[0].nodePort }')/" 
     
 Das UI beinhaltet Buttons, mit welchem Testnachrichten gesendet werden können. Diese sind in den Logdateien der Devices ersichtlich.

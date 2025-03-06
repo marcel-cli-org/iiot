@@ -8,9 +8,3 @@ spec:
   sensors:
     - name: enviv-sensor
       sensorRef: enviv
-    - name: rfidv2-sensor
-      sensorRef: rfidv2
-  actors:
-    - name: servo-actor
-      actorRef: servo
-

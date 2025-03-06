@@ -3,7 +3,7 @@ kind: MQTTDevice
 metadata:
   name: au-u69
 spec:
-  deviceRef: m5stack-core  # Name der referenzierten Device-Ressource
+  deviceRef: m5stack-atom  # Name der referenzierten Device-Ressource
   mqttSettings:
     broker: mqtt://10.0.40.8:11883  # URL des MQTT-Brokers
     topic: au-u69  # MQTT-Topic für das Gerät

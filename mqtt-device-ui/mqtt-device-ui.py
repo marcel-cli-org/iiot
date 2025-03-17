@@ -259,6 +259,12 @@ def publish():
     elif "rfid" in sensor_ref.lower():
         # RFID-Beispiel: RFID=AB CD EF 12 34 56 78
         payload = "RFID=AB CD EF 12 34 56 78"
+    elif "invoicing" in sensor_ref.lower(): 
+        payload = '{ "product_id": 1, "quantity": 1, "customer_id": 1}'
+    elif "shipment" in sensor_ref.lower(): 
+        payload = '{ "product_id": 1, "quantity": 1, "customer_id": 2}' 
+    elif "order" in sensor_ref.lower(): 
+        payload = '{ "product_id": 1, "quantity": 1, "customer_id": 3}'                          
     else:
         # Fallback
         payload = f"TestMsg for {sensor_ref}"

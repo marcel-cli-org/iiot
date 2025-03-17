@@ -30,25 +30,30 @@ def on_message(client, userdata, msg):
     except Exception as e:
         print(f"Fehler beim Schreiben in {file_path}: {e}", file=sys.stderr)
 
-    # (Optional) Daten als JSON per HTTP POST mit CloudEvents-Headern senden
-    # Hier musst du ggf. deine Ziel-URL etc. anpassen.
-    cloudevents_url = os.environ.get("CLOUDEVENTS_URL", "")
-    if cloudevents_url:
-        data_json = {
-            "topic": msg.topic,
-            "payload": payload_str
-        }
+    # Überprüfe, ob das Topic zu den relevanten Typen gehört
+    last_entry = msg.topic.split("/")[-1]
+    valid_types = ["shipment", "invoicing", "order"]
+    if last_entry in valid_types:
+        cloudevents_url = os.environ.get("CLOUDEVENTS_URL", "http://broker-ingress.knative-eventing/ms-brkr/default")
         headers = {
-            "Content-Type": "application/json",
+            "Host": "broker-ingress.knative-eventing.svc.cluster.local",
+            "Ce-Id": "K-native-Broker",
             "Ce-Specversion": "1.0",
-            "Ce-Type": "my.mqtt.message",
-            "Ce-Source": "mqtt-listener",
-            "Ce-Id": "some-unique-id"
+            "Ce-Type": last_entry,
+            "Ce-Source": msg.topic,
+            "Content-Type": "application/json"
         }
+        
+        # Debugging: Header ausgeben
+        print("Sende HTTP POST mit folgenden Headern:")
+        for key, value in headers.items():
+            print(f"{key}: {value}")
+        print(f"Payload: {payload_str}")
+        
         try:
-            resp = requests.post(cloudevents_url, headers=headers, data=json.dumps(data_json))
+            resp = requests.post(cloudevents_url, headers=headers, json=json.loads(payload_str))
             resp.raise_for_status()
-            print(f"CloudEvent an {cloudevents_url} gesendet.")
+            print(f"CloudEvent für {last_entry} an {cloudevents_url} gesendet.")
         except Exception as e:
             print(f"Fehler beim Senden an {cloudevents_url}: {e}", file=sys.stderr)
 

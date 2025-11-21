@@ -5,7 +5,7 @@ metadata:
 spec:
   deviceRef: m5stack-atom  # Name der referenzierten Device-Ressource
   mqttSettings:
-    broker: mqtt://10.0.40.8:11883  # URL des MQTT-Brokers
+    broker: mqtt://cloud.tbz.ch:11883  # URL des MQTT-Brokers
     topic: au-u69  # MQTT-Topic für das Gerät
     qos: 1  # Quality of Service Level (0, 1 oder 2)
     retain: false  # Nachricht zurückhalten (true oder false)
